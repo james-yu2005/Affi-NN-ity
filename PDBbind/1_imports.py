@@ -1,4 +1,4 @@
-# pip install PyTDC rdkit-pypi torch torch-geometric pandas tqdm deepchem fair-esm biopython
+# !pip install PyTDC rdkit-pypi torch torch-geometric pandas tqdm deepchem fair-esm biopython
 # import torch
 # import torch_geometric
 # from torch_geometric.data import Dataset, Data

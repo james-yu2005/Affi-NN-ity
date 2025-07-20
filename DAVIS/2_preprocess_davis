@@ -1,0 +1,10 @@
+data = DTI(name = 'DAVIS')
+
+# Kd values have wide range and are skewed so it’s hard for a neural network to learn from.
+# PyTDC transforms the Y column from Kd to pKd which makes the data unitless, normalized, and log-scaled, preparing it for regression.
+data.convert_to_log(form = 'binding')
+df_DAVIS = data.get_data()
+
+# Remove duplicates
+df_DAVIS.drop_duplicates(inplace=True)
+df_DAVIS.head(5)
