@@ -1,4 +1,4 @@
-# AffiNNity: Drug-Protein Binding Affinity Prediction
+# Affi-NN-ity: Drug-Protein Binding Affinity Prediction
 This repository contains a pipeline for predicting drug-protein binding affinities utilizing Graph Neural Networks (GIN) implemented in PyTorch and DeepChem.
 
 ## Overview
