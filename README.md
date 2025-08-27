@@ -5,6 +5,7 @@ This repository provides a complete pipeline to predict drug-protein binding aff
 ## Overview
 
 WATai.ca: https://watai.ca/projects
+
 Predicting drug-protein binding affinity is vital for drug discovery. This project integrates:
 
 * **DeepChem** for dataset handling.
