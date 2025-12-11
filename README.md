@@ -1,64 +1,131 @@
-# Affi-NN-ity: Drug-Protein Binding Affinity Prediction
+# Affi-NN-ity: Drug Protein Binding Affinity Prediction
 
-This repository provides a complete pipeline to predict drug-protein binding affinities using Graph Neural Networks (GIN) implemented with PyTorch and DeepChem.
+Affi-NN-ity is an end-to-end system for predicting drug protein binding affinity using graph neural networks, protein language models, and multi-modal attention. The pipeline constructs ligand molecular graphs, extracts protein and pocket sequences from PDB files, embeds both using ESM-2, and trains a GIN-based model to regress pKd values.
 
-## Overview
+---
 
-WATai.ca: https://watai.ca/projects
+## Features
 
-Predicting drug-protein binding affinity is vital for drug discovery. This project integrates:
+- HiQBind preprocessing pipeline for ligands, proteins, and pockets  
+- Automated pocket extraction using atom distance filtering  
+- Protein and pocket embeddings using pretrained ESM-2  
+- RDKit-based graph construction for ligand molecules  
+- Graph Isomorphism Network (GIN) ligand encoder  
+- Multi-modal fusion of ligand graphs, Morgan fingerprints, and protein embeddings  
+- K-Fold cross-validation training  
+- Full evaluation with RMSE, MAE, Pearson R, CI, and MSE  
+- Reproducible data loaders and preprocessing utilities  
 
-* **DeepChem** for dataset handling.
-* **RDKit and PyTorch Geometric** for molecular graph processing.
-* **Graph Isomorphism Networks (GIN)** for predictive modeling.
+---
 
-## Dataset
+## Dataset Processing
 
-The **PDBBind Refined** dataset from DeepChem is used, split into:
+### Pocket Extraction
+The pipeline:
+1. Loads ligand coordinates from SDF files  
+2. Loads protein structures using BioPython  
+3. Computes ligand-to-protein atom distances  
+4. Selects residues within a 10 Å cutoff  
+5. Outputs a refined PDB containing only pocket residues  
 
-* Train: 3881 samples
-* Validation: 485 samples
-* Test: 486 samples
+### Leakage Prevention
+Train and validation samples are removed when their ligand-protein pairs overlap with:
+- TDC DAVIS  
+- TDC KIBA  
+- The HiQBind test split  
 
-Binding affinities are normalized (zero-mean, unit-variance) via DeepChem transformers.
+This ensures no ligand-protein pairs leak across training and testing.
 
-## Feature Extraction
+---
 
-### Drug Molecules
+## Molecular Representation
 
-* **Node features**: Atomic number, degree, charge, hybridization, aromaticity, hydrogens, radical electrons, ring membership, chirality.
-* **Edge features**: Bond type, ring membership.
+### Ligand Representation
+Using RDKit, the system extracts:
 
-### Protein Targets
+**Node features**
+- atomic number  
+- atom degree  
+- formal charge  
+- hybridization  
+- aromaticity  
+- total hydrogens  
+- radical electrons  
+- ring membership  
+- chirality  
 
-* Amino acid sequences extracted from PDB files.
-* Numerical encoding of sequences with padding for uniform length.
+**Edge features**
+- bond type  
+- ring membership  
 
-## Preprocessing
+**Additional features**
+- Morgan fingerprint (1024 bits)  
+- Adjacency list for PyTorch Geometric  
 
-* Load and standardize data using DeepChem.
-* Convert ligand molecule files (SDF) into graphs using RDKit.
-* Protein sequences numerically encoded from PDB files.
+### Protein Representation
+For each complex:
+- Full protein sequence is extracted  
+- Pocket sequence is extracted  
+- Both are embedded with ESM-2  
+- Resulting embeddings are concatenated into a 640-dimensional feature vector  
+
+---
+
+## Graph Construction
+
+Each entry is converted to a PyTorch Geometric `Data` object with:
+
+- `x`: node features  
+- `edge_index`: adjacency matrix  
+- `edge_attr`: edge features  
+- `morgan_fp`: fingerprint vector  
+- `target_features`: protein+pocket embedding  
+- `y`: binding affinity (pKd)  
+
+These lists of graph objects are wrapped into standard PyG DataLoaders.
+
+---
 
 ## Model Architecture
 
-### Graph Isomorphism Network (GIN)
+### Ligand Encoder
+- MLP node embedder  
+- Two GINConv layers with batch normalization  
+- Residual connections  
+- Combined mean and sum pooling  
 
-* Embedding drug molecules using GIN convolutions.
-* Protein sequences processed via dense layers.
-* Embeddings combined to predict binding affinity.
+### Protein Encoder
+- Feed-forward network projecting the 640-dimensional embedding  
+
+### Fingerprint Encoder
+- MLP applied to the 1024-bit fingerprint  
+
+### Multi-modal Fusion
+- Concatenates ligand, protein, and fingerprint embeddings  
+- Learns attention weights over modalities  
+- Final regression MLP outputs a pKd prediction  
+
+---
 
 ## Training
 
-* Optimizer: Adam
-* Loss: Mean Squared Error (MSE)
-* Epochs: 200 (early stopping with patience of 25)
-* Learning rate: 0.001
+- Optimizer: AdamW  
+- Loss: Mean Squared Error  
+- ReduceLROnPlateau scheduler  
+- Gradient clipping  
+- Early stopping  
+- Five-fold cross-validation  
+- Training and validation metrics logged every epoch  
 
-## Evaluation Metrics
+---
 
-Performance on the test set:
+## Evaluation
 
-* **MSE**: 0.7641
-* **RMSE**: 0.8742
-* **R² Score**: 0.2456
+The evaluation script reports:
+
+- MSE  
+- RMSE  
+- MAE  
+- Pearson correlation  
+- Standard deviation of residuals  
+- Concordance index  
