@@ -22,6 +22,7 @@ Affi-NN-ity is an end-to-end system for predicting drug protein binding affinity
 
 The codebase is organized into modular components for data handling, model definition, and training:
 
+```text
 project_root/
 │
 ├── train_pdbbind.py           # Main entry point for PDBBind experiments
@@ -40,7 +41,7 @@ project_root/
 │
 └── scripts/                   # UTILITIES
     └── hiqbind_etl.py         # One-time ETL script for HiQBind pocket generation
-
+```
 ---
 
 ## Usage Guide
