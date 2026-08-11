@@ -16,6 +16,7 @@ Affi-NN-ity is an end-to-end system for predicting drug protein binding affinity
 - Full evaluation with RMSE, MAE, Pearson R, CI, and MSE
 - Reproducible data loaders and preprocessing utilities
 
+Demo: https://drive.google.com/file/d/1VGcPRygYwSClGFLFYv-HEhEQXJ0FBoKF/view
 ---
 
 ## Repository Structure
