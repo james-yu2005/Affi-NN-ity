@@ -2,6 +2,7 @@
 
 Affi-NN-ity is an end-to-end system for predicting drug protein binding affinity using graph neural networks, protein language models, and multi-modal attention. The pipeline constructs ligand molecular graphs, extracts protein and pocket sequences from PDB files, embeds both using ESM-2, and trains a GIN-based model to regress pKd values.
 
+Demo: https://drive.google.com/file/d/1VGcPRygYwSClGFLFYv-HEhEQXJ0FBoKF/view
 ---
 
 ## Features
@@ -16,7 +17,6 @@ Affi-NN-ity is an end-to-end system for predicting drug protein binding affinity
 - Full evaluation with RMSE, MAE, Pearson R, CI, and MSE
 - Reproducible data loaders and preprocessing utilities
 
-Demo: https://drive.google.com/file/d/1VGcPRygYwSClGFLFYv-HEhEQXJ0FBoKF/view
 ---
 
 ## Repository Structure
