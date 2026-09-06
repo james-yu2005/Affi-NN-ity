@@ -1,0 +1,36 @@
+{
+  "name": "affinity-visualization",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^2.0.0",
+    "@react-three/drei": "^9.117.3",
+    "@react-three/fiber": "^8.17.10",
+    "@types/node": "^20",
+    "@types/three": "^0.165.0",
+    "autoprefixer": "^10.0.1",
+    "framer-motion": "^11.0.0",
+    "lucide-react": "^0.400.0",
+    "next": "15.5.4",
+    "postcss": "^8",
+    "react": "^18",
+    "react-dom": "^18",
+    "recharts": "^2.8.0",
+    "tailwindcss": "^3.4.1",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "@gradio/client": "^2.0.0",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^8",
+    "eslint-config-next": "15.5.4",
+    "typescript": "5.9.3"
+  }
+}
